@@ -51,7 +51,8 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Account: 'Account'
+  Account: 'Account',
+  PendingContractChange: 'PendingContractChange'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -82,6 +83,20 @@ export const AccountScalarFieldEnum = {
 } as const
 
 export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const PendingContractChangeScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  value: 'value',
+  codeHash: 'codeHash',
+  expiresAt: 'expiresAt',
+  accountId: 'accountId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PendingContractChangeScalarFieldEnum = (typeof PendingContractChangeScalarFieldEnum)[keyof typeof PendingContractChangeScalarFieldEnum]
 
 
 export const SortOrder = {

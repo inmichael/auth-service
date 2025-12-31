@@ -1,5 +1,6 @@
 import { Account } from "prisma/generated/client";
 import { AllConfigs } from "src/config";
+import { UserRepository } from "src/shared/repositories";
 
 import { RpcStatus } from "@mondocinema/common";
 import {
@@ -22,8 +23,9 @@ export class AuthService {
 	private readonly REFRESH_TOKEN_TTL: number;
 
 	constructor(
-		private readonly configService: ConfigService<AllConfigs>,
+		configService: ConfigService<AllConfigs>,
 		private readonly authRepository: AuthRepository,
+		private readonly userRepository: UserRepository,
 		private readonly otpService: OtpService,
 		private readonly passportService: PassportService,
 	) {
@@ -39,9 +41,9 @@ export class AuthService {
 		let account: Account | null;
 
 		if (type === "phone") {
-			account = await this.authRepository.findByPhone(identifier);
+			account = await this.userRepository.findByPhone(identifier);
 		} else {
-			account = await this.authRepository.findByEmail(identifier);
+			account = await this.userRepository.findByEmail(identifier);
 		}
 
 		if (!account) {
@@ -67,9 +69,9 @@ export class AuthService {
 		let account: Account | null;
 
 		if (type === "phone") {
-			account = await this.authRepository.findByPhone(identifier);
+			account = await this.userRepository.findByPhone(identifier);
 		} else {
-			account = await this.authRepository.findByEmail(identifier);
+			account = await this.userRepository.findByEmail(identifier);
 		}
 
 		if (!account) {

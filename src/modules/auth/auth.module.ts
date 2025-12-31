@@ -1,4 +1,5 @@
 import { getPassportConfig } from "src/config";
+import { UserRepository } from "src/shared/repositories";
 
 import { PassportModule } from "@mondocinema/passport";
 import { Module } from "@nestjs/common";
@@ -19,6 +20,6 @@ import { AuthService } from "./auth.service";
 		OtpModule,
 	],
 	controllers: [AuthController],
-	providers: [AuthService, AuthRepository],
+	providers: [AuthService, AuthRepository, UserRepository],
 })
 export class AuthModule {}

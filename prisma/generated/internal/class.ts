@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider     = \"prisma-client\"\n  output       = \"./generated\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Account {\n  id String @id @default(nanoid())\n\n  phone String? @unique\n  email String? @unique\n\n  isPhoneVerified Boolean @default(false) @map(\"is_phone_verified\")\n  isEmailVerified Boolean @default(false) @map(\"is_email_verified\")\n\n  role Role @default(USER)\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@map(\"accounts\")\n}\n\nenum Role {\n  USER\n  ADMIN\n\n  @@map(\"roles\")\n}\n",
+  "inlineSchema": "generator client {\n  provider     = \"prisma-client\"\n  output       = \"./generated\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Account {\n  id String @id @default(nanoid())\n\n  phone String? @unique\n  email String? @unique\n\n  isPhoneVerified Boolean @default(false) @map(\"is_phone_verified\")\n  isEmailVerified Boolean @default(false) @map(\"is_email_verified\")\n\n  pendingContactChanges PendingContractChange[]\n\n  role Role @default(USER)\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@map(\"accounts\")\n}\n\nmodel PendingContractChange {\n  id String @id @default(nanoid())\n\n  type      String\n  value     String\n  codeHash  String   @map(\"code_hash\")\n  expiresAt DateTime @map(\"expires_at\")\n\n  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)\n  accountId String  @map(\"account_id\")\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@unique([accountId, type])\n  @@map(\"pending_contact_changes\")\n}\n\nenum Role {\n  USER\n  ADMIN\n\n  @@map(\"roles\")\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Account\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isPhoneVerified\",\"kind\":\"scalar\",\"type\":\"Boolean\",\"dbName\":\"is_phone_verified\"},{\"name\":\"isEmailVerified\",\"kind\":\"scalar\",\"type\":\"Boolean\",\"dbName\":\"is_email_verified\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"updated_at\"}],\"dbName\":\"accounts\"}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Account\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isPhoneVerified\",\"kind\":\"scalar\",\"type\":\"Boolean\",\"dbName\":\"is_phone_verified\"},{\"name\":\"isEmailVerified\",\"kind\":\"scalar\",\"type\":\"Boolean\",\"dbName\":\"is_email_verified\"},{\"name\":\"pendingContactChanges\",\"kind\":\"object\",\"type\":\"PendingContractChange\",\"relationName\":\"AccountToPendingContractChange\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"updated_at\"}],\"dbName\":\"accounts\"},\"PendingContractChange\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"codeHash\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"code_hash\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"expires_at\"},{\"name\":\"account\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"AccountToPendingContractChange\"},{\"name\":\"accountId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"account_id\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"updated_at\"}],\"dbName\":\"pending_contact_changes\"}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -183,6 +183,16 @@ export interface PrismaClient<
     * ```
     */
   get account(): Prisma.AccountDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.pendingContractChange`: Exposes CRUD operations for the **PendingContractChange** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PendingContractChanges
+    * const pendingContractChanges = await prisma.pendingContractChange.findMany()
+    * ```
+    */
+  get pendingContractChange(): Prisma.PendingContractChangeDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

@@ -22,3 +22,8 @@ export * from './enums.js';
  * 
  */
 export type Account = Prisma.AccountModel
+/**
+ * Model PendingContractChange
+ * 
+ */
+export type PendingContractChange = Prisma.PendingContractChangeModel

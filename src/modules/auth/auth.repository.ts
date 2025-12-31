@@ -11,14 +11,6 @@ import { Injectable } from "@nestjs/common";
 export class AuthRepository {
 	constructor(private readonly prisma: PrismaService) {}
 
-	async findByPhone(phone: string): Promise<Account | null> {
-		return await this.prisma.account.findUnique({ where: { phone } });
-	}
-
-	async findByEmail(email: string): Promise<Account | null> {
-		return await this.prisma.account.findUnique({ where: { email } });
-	}
-
 	async create(data: AccountCreateInput): Promise<Account> {
 		return await this.prisma.account.create({ data });
 	}

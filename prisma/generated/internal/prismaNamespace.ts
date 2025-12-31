@@ -384,7 +384,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  Account: 'Account'
+  Account: 'Account',
+  PendingContractChange: 'PendingContractChange'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -400,7 +401,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account"
+    modelProps: "account" | "pendingContractChange"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -478,6 +479,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PendingContractChange: {
+      payload: Prisma.$PendingContractChangePayload<ExtArgs>
+      fields: Prisma.PendingContractChangeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PendingContractChangeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingContractChangePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PendingContractChangeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingContractChangePayload>
+        }
+        findFirst: {
+          args: Prisma.PendingContractChangeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingContractChangePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PendingContractChangeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingContractChangePayload>
+        }
+        findMany: {
+          args: Prisma.PendingContractChangeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingContractChangePayload>[]
+        }
+        create: {
+          args: Prisma.PendingContractChangeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingContractChangePayload>
+        }
+        createMany: {
+          args: Prisma.PendingContractChangeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PendingContractChangeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingContractChangePayload>[]
+        }
+        delete: {
+          args: Prisma.PendingContractChangeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingContractChangePayload>
+        }
+        update: {
+          args: Prisma.PendingContractChangeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingContractChangePayload>
+        }
+        deleteMany: {
+          args: Prisma.PendingContractChangeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PendingContractChangeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PendingContractChangeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingContractChangePayload>[]
+        }
+        upsert: {
+          args: Prisma.PendingContractChangeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingContractChangePayload>
+        }
+        aggregate: {
+          args: Prisma.PendingContractChangeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePendingContractChange>
+        }
+        groupBy: {
+          args: Prisma.PendingContractChangeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PendingContractChangeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PendingContractChangeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PendingContractChangeCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -529,6 +604,20 @@ export const AccountScalarFieldEnum = {
 } as const
 
 export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const PendingContractChangeScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  value: 'value',
+  codeHash: 'codeHash',
+  expiresAt: 'expiresAt',
+  accountId: 'accountId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PendingContractChangeScalarFieldEnum = (typeof PendingContractChangeScalarFieldEnum)[keyof typeof PendingContractChangeScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -719,6 +808,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   account?: Prisma.AccountOmit
+  pendingContractChange?: Prisma.PendingContractChangeOmit
 }
 
 /* Types for Logging */

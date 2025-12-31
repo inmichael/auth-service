@@ -1,7 +1,14 @@
+import { UserRepository } from "src/shared/repositories";
+
 import { convertEnum, RpcStatus } from "@mondocinema/common";
-import { GetAccountRequest } from "@mondocinema/contracts/gen/accounts";
+import {
+	GetAccountRequest,
+	InitEmailChangeRequest,
+} from "@mondocinema/contracts/gen/accounts";
 import { Injectable } from "@nestjs/common";
 import { RpcException } from "@nestjs/microservices";
+
+import { OtpService } from "../otp/otp.service";
 
 import { AccountsRepository } from "./accounts.repository";
 
@@ -13,7 +20,11 @@ enum Role {
 
 @Injectable()
 export class AccountsService {
-	constructor(private readonly accountRepository: AccountsRepository) {}
+	constructor(
+		private readonly accountRepository: AccountsRepository,
+		private readonly userRepository: UserRepository,
+		private readonly otpService: OtpService,
+	) {}
 
 	async getAccount({ id }: GetAccountRequest) {
 		const account = await this.accountRepository.findById(id);
@@ -33,5 +44,18 @@ export class AccountsService {
 			isEmailVerified: account.isEmailVerified,
 			role: convertEnum(Role, account.role),
 		};
+	}
+
+	async initEmailChange({ email, userId }: InitEmailChangeRequest) {
+		const existing = await this.userRepository.findByEmail(email);
+
+		if (existing) {
+			throw new RpcException({
+				code: RpcStatus.ALREADY_EXISTS,
+				details: "Email already is use",
+			});
+		}
+
+		const code = await this.otpService.send(email, "email");
 	}
 }
