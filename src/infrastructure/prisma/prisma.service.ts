@@ -18,7 +18,7 @@ export class PrismaService
 
 	constructor(configService: ConfigService) {
 		const adapter = new PrismaPg({
-			connectionString: configService.getOrThrow<string>("POSTGRES_URI"),
+			connectionString: configService.getOrThrow<string>("DATABASE_URI"),
 		});
 
 		super({ adapter });

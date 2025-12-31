@@ -1,4 +1,8 @@
+import { getPassportConfig } from "src/config";
+
+import { PassportModule } from "@mondocinema/passport";
 import { Module } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 
 import { OtpModule } from "../otp/otp.module";
 
@@ -7,7 +11,13 @@ import { AuthRepository } from "./auth.repository";
 import { AuthService } from "./auth.service";
 
 @Module({
-	imports: [OtpModule],
+	imports: [
+		PassportModule.registerAsync({
+			useFactory: getPassportConfig,
+			inject: [ConfigService],
+		}),
+		OtpModule,
+	],
 	controllers: [AuthController],
 	providers: [AuthService, AuthRepository],
 })

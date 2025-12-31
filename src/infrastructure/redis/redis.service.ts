@@ -1,4 +1,5 @@
 import Redis from "ioredis";
+import type { AllConfigs } from "src/config";
 
 import {
 	Injectable,
@@ -15,12 +16,12 @@ export class RedisService
 {
 	private readonly logger = new Logger(RedisService.name);
 
-	constructor(configService: ConfigService) {
+	constructor(configService: ConfigService<AllConfigs>) {
 		super({
-			host: configService.getOrThrow<string>("REDIS_HOST"),
-			username: configService.getOrThrow<string>("REDIS_USER"),
-			password: configService.getOrThrow<string>("REDIS_PASSWORD"),
-			port: configService.getOrThrow<number>("REDIS_PORT"),
+			host: configService.getOrThrow("redis.host", { infer: true }),
+			username: configService.getOrThrow("redis.user", { infer: true }),
+			password: configService.getOrThrow("redis.password", { infer: true }),
+			port: configService.getOrThrow("redis.port", { infer: true }),
 			maxRetriesPerRequest: 5,
 			enableOfflineQueue: true,
 		});

@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { generateCode } from "patcode";
 import { RedisService } from "src/infrastructure/redis/redis.service";
 
+import { RpcStatus } from "@mondocinema/common";
 import { Injectable } from "@nestjs/common";
 import { RpcException } from "@nestjs/microservices";
 
@@ -22,13 +23,19 @@ export class OtpService {
 		const storedHash = await this.redis.get(key);
 
 		if (!storedHash) {
-			throw new RpcException("Invalid or expired code");
+			throw new RpcException({
+				code: RpcStatus.NOT_FOUND,
+				details: "Invalid or expired code",
+			});
 		}
 
 		const incomingHash = createHash("sha256").update(code).digest("hex");
 
 		if (incomingHash !== storedHash) {
-			throw new RpcException("Invalid or expired code");
+			throw new RpcException({
+				code: RpcStatus.NOT_FOUND,
+				details: "Invalid or expired code",
+			});
 		}
 
 		await this.redis.del(key);

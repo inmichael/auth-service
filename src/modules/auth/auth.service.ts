@@ -1,11 +1,14 @@
 import { Account } from "prisma/generated/client";
+import { AllConfigs } from "src/config";
 
+import { RpcStatus } from "@mondocinema/common";
 import {
 	SendOtpRequest,
 	VerifyOtpRequest,
-	VerifyOtpResponse,
 } from "@mondocinema/contracts/gen/auth";
+import { PassportService, TokenPayload } from "@mondocinema/passport";
 import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { RpcException } from "@nestjs/microservices";
 
 import { OtpService } from "../otp/otp.service";
@@ -14,10 +17,22 @@ import { AuthRepository } from "./auth.repository";
 
 @Injectable()
 export class AuthService {
+	private readonly ACCESS_TOKEN_TTL: number;
+	private readonly REFRESH_TOKEN_TTL: number;
+
 	constructor(
+		private readonly configService: ConfigService<AllConfigs>,
 		private readonly authRepository: AuthRepository,
 		private readonly otpService: OtpService,
-	) {}
+		private readonly passportService: PassportService,
+	) {
+		this.ACCESS_TOKEN_TTL = configService.getOrThrow("passport.accessTtl", {
+			infer: true,
+		});
+		this.REFRESH_TOKEN_TTL = configService.getOrThrow("passport.refreshTtl", {
+			infer: true,
+		});
+	}
 
 	async sendOtp({ identifier, type }: SendOtpRequest) {
 		let account: Account | null;
@@ -57,7 +72,10 @@ export class AuthService {
 		}
 
 		if (!account) {
-			throw new RpcException("Account not found");
+			throw new RpcException({
+				code: RpcStatus.NOT_FOUND,
+				details: "Account not found",
+			});
 		}
 
 		if (type === "phone" && !account.isPhoneVerified) {
@@ -68,6 +86,21 @@ export class AuthService {
 			await this.authRepository.update(account.id, { isEmailVerified: true });
 		}
 
-		return { accessToken: "123456", refreshToken: "123456" };
+		return this.generateTokens(account.id);
+	}
+
+	private generateTokens(userId: string) {
+		const payload: TokenPayload = { sub: userId };
+
+		const accessToken = this.passportService.generate(
+			String(payload.sub),
+			this.ACCESS_TOKEN_TTL,
+		);
+		const refreshToken = this.passportService.generate(
+			String(payload.sub),
+			this.REFRESH_TOKEN_TTL,
+		);
+
+		return { accessToken, refreshToken };
 	}
 }
