@@ -1014,15 +1014,15 @@
   resolved "https://registry.yarnpkg.com/@lukeed/csprng/-/csprng-1.1.0.tgz#1e3e4bd05c1cc7a0b2ddbd8a03f39f6e4b5e6cfe"
   integrity sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==
 
-"@mondocinema/common@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@mondocinema/common/-/common-1.0.0.tgz#ffb8418517d6c0863cf9a153a750d9a5336d36f4"
-  integrity sha512-85ZlJJ67/uK9Z342lfUIBuMiquiZy5P0UPwi09rML2qAS+TqJHGy8Ly/kSm17P6KvcGdsEC54Zby/o36nkZkzQ==
+"@mondocinema/common@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@mondocinema/common/-/common-1.0.1.tgz#c2d58dbacb4f00a9d145948f25d8298028838ceb"
+  integrity sha512-LMs55ykp0OqzkG0g1VMSDEBwqp4eXgU16mzbAHgI6eORoAuyX7GPj1dm60vmcaP7rqnF4LRudVMGK2mVQlwd/A==
 
-"@mondocinema/contracts@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@mondocinema/contracts/-/contracts-1.0.3.tgz#86ddbe6222ef5d51a5a3051bb938a09a3cafcc0d"
-  integrity sha512-yTNEhmFDhrOpVF+Cij91sAvJ+ZSGybjcDC19MH9GztUJmNms5DQ+UrFsL8GHMk+7wOZzlF7SuCVYMCze5kGJww==
+"@mondocinema/contracts@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@mondocinema/contracts/-/contracts-1.0.5.tgz#1bac300ef325e076bc6561a6c63b8173dd314c66"
+  integrity sha512-hXlZDY+c09WZEXOWZWh5b7hXXIRypUee3F+coC1Q/Xgfq37Vy65nkCDargSjsU0BtFhBrwkl6tD3UKNws7ym/w==
   dependencies:
     "@nestjs/microservices" "^11.1.11"
     rxjs "^7.8.2"
