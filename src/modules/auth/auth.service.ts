@@ -1,5 +1,4 @@
 import { Account } from "prisma/generated/client";
-import { AllConfigs } from "src/config";
 import { UserRepository } from "src/shared/repositories";
 
 import { RpcStatus } from "@mondocinema/common";
@@ -8,34 +7,22 @@ import {
 	SendOtpRequest,
 	VerifyOtpRequest,
 } from "@mondocinema/contracts/gen/auth";
-import { PassportService, TokenPayload } from "@mondocinema/passport";
 import { Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { RpcException } from "@nestjs/microservices";
 
 import { OtpService } from "../otp/otp.service";
+import { TokenService } from "../token/token.service";
 
 import { AuthRepository } from "./auth.repository";
 
 @Injectable()
 export class AuthService {
-	private readonly ACCESS_TOKEN_TTL: number;
-	private readonly REFRESH_TOKEN_TTL: number;
-
 	constructor(
-		configService: ConfigService<AllConfigs>,
 		private readonly authRepository: AuthRepository,
 		private readonly userRepository: UserRepository,
 		private readonly otpService: OtpService,
-		private readonly passportService: PassportService,
-	) {
-		this.ACCESS_TOKEN_TTL = configService.getOrThrow("passport.accessTtl", {
-			infer: true,
-		});
-		this.REFRESH_TOKEN_TTL = configService.getOrThrow("passport.refreshTtl", {
-			infer: true,
-		});
-	}
+		private readonly tokenService: TokenService,
+	) {}
 
 	async sendOtp({ identifier, type }: SendOtpRequest) {
 		let account: Account | null;
@@ -89,11 +76,11 @@ export class AuthService {
 			await this.userRepository.update(account.id, { isEmailVerified: true });
 		}
 
-		return this.generateTokens(account.id);
+		return this.tokenService.generateTokens(account.id);
 	}
 
 	async refresh({ refreshToken }: RefreshRequest) {
-		const result = this.passportService.verify(refreshToken);
+		const result = this.tokenService.verify(refreshToken);
 
 		if (!result.valid) {
 			throw new RpcException({
@@ -102,21 +89,6 @@ export class AuthService {
 			});
 		}
 
-		return this.generateTokens(result.userId);
-	}
-
-	private generateTokens(userId: string) {
-		const payload: TokenPayload = { sub: userId };
-
-		const accessToken = this.passportService.generate(
-			String(payload.sub),
-			this.ACCESS_TOKEN_TTL,
-		);
-		const refreshToken = this.passportService.generate(
-			String(payload.sub),
-			this.REFRESH_TOKEN_TTL,
-		);
-
-		return { accessToken, refreshToken };
+		return this.tokenService.generateTokens(result.userId);
 	}
 }

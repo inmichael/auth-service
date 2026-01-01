@@ -23,7 +23,7 @@
     "@grpc/grpc-js": "^1.14.3",
     "@grpc/proto-loader": "^0.8.0",
     "@mondocinema/common": "^1.0.1",
-    "@mondocinema/contracts": "^1.0.6",
+    "@mondocinema/contracts": "^1.0.7",
     "@mondocinema/core": "^1.0.5",
     "@mondocinema/passport": "^1.0.0",
     "@nestjs/common": "^11.0.1",
