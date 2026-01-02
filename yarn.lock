@@ -1020,9 +1020,9 @@
   integrity sha512-LMs55ykp0OqzkG0g1VMSDEBwqp4eXgU16mzbAHgI6eORoAuyX7GPj1dm60vmcaP7rqnF4LRudVMGK2mVQlwd/A==
 
 "@mondocinema/contracts@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@mondocinema/contracts/-/contracts-1.0.7.tgz#96b51660263cb48ebb66e8aa94ce27f1b8400cc6"
-  integrity sha512-BQv/8H7FlPU/TZ7FgHeXlTv00Jpw0i8KhmFlPYPKYegl/QmVF0n09ObvNjEm6VQikY79Bmear0OR8/dtmPjudA==
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@mondocinema/contracts/-/contracts-1.0.8.tgz#b860fcd830c3a5224495d3b1852ed8c36dfd7f69"
+  integrity sha512-UQyZVI+QZxZp7eSW5tK43v3D675d8IKzeaR7UWpXWdjtvqscwWoe/fCZL4nCh8Op+MoH3XH3pVwlEfHb/thhLg==
   dependencies:
     "@nestjs/microservices" "^11.1.11"
     rxjs "^7.8.2"

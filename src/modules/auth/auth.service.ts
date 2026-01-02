@@ -13,12 +13,9 @@ import { RpcException } from "@nestjs/microservices";
 import { OtpService } from "../otp/otp.service";
 import { TokenService } from "../token/token.service";
 
-import { AuthRepository } from "./auth.repository";
-
 @Injectable()
 export class AuthService {
 	constructor(
-		private readonly authRepository: AuthRepository,
 		private readonly userRepository: UserRepository,
 		private readonly otpService: OtpService,
 		private readonly tokenService: TokenService,
@@ -34,7 +31,7 @@ export class AuthService {
 		}
 
 		if (!account) {
-			account = await this.authRepository.create({
+			account = await this.userRepository.create({
 				email: type === "email" ? identifier : undefined,
 				phone: type === "phone" ? identifier : undefined,
 			});
