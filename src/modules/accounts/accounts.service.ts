@@ -1,3 +1,4 @@
+import { MessagingService } from "src/infrastructure/messaging/messaging.service";
 import { UserRepository } from "src/shared/repositories";
 
 import { convertEnum, RpcStatus } from "@mondocinema/common";
@@ -24,6 +25,7 @@ enum Role {
 @Injectable()
 export class AccountsService {
 	constructor(
+		private readonly messagingService: MessagingService,
 		private readonly accountRepository: AccountsRepository,
 		private readonly userRepository: UserRepository,
 		private readonly otpService: OtpService,
@@ -117,7 +119,11 @@ export class AccountsService {
 
 		const { code, hash } = await this.otpService.send(value, type);
 
-		console.log("code: ", code);
+		if (type === "email") {
+			await this.messagingService.emailChanged({ code, email: value });
+		} else {
+			await this.messagingService.phoneChanged({ code, phone: value });
+		}
 
 		await this.accountRepository.upsertPendingChange({
 			accountId: userId,

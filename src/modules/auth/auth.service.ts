@@ -1,4 +1,5 @@
 import { Account } from "prisma/generated/client";
+import { MessagingService } from "src/infrastructure/messaging/messaging.service";
 import { UserRepository } from "src/shared/repositories";
 
 import { RpcStatus } from "@mondocinema/common";
@@ -19,6 +20,7 @@ export class AuthService {
 		private readonly userRepository: UserRepository,
 		private readonly otpService: OtpService,
 		private readonly tokenService: TokenService,
+		private readonly messagingService: MessagingService,
 	) {}
 
 	async sendOtp({ identifier, type }: SendOtpRequest) {
@@ -37,12 +39,16 @@ export class AuthService {
 			});
 		}
 
-		const code = await this.otpService.send(
+		const { code } = await this.otpService.send(
 			identifier,
 			type as "phone" | "email",
 		);
 
-		console.debug("CODE: ", code);
+		await this.messagingService.otpRequested({
+			identifier,
+			type,
+			code,
+		});
 
 		return { ok: true };
 	}

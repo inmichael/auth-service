@@ -1,4 +1,5 @@
 import { RedisModule } from "src/infrastructure/redis/redis.module";
+import { UserRepository } from "src/shared/repositories";
 
 import { Module } from "@nestjs/common";
 
@@ -11,6 +12,6 @@ import { TelegramService } from "./telegram.service";
 @Module({
 	imports: [RedisModule, TokenModule],
 	controllers: [TelegramController],
-	providers: [TelegramService, TelegramRepository],
+	providers: [TelegramService, TelegramRepository, UserRepository],
 })
 export class TelegramModule {}
