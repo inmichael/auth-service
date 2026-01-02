@@ -6,4 +6,7 @@ export class GrpcValidator {
 
 	@IsInt()
 	GRPC_PORT: number;
+
+	@IsString()
+	USERS_GRPC_URL: string;
 }

@@ -14,6 +14,7 @@ import { ConfigService } from "@nestjs/config";
 import { RpcException } from "@nestjs/microservices";
 
 import { TokenService } from "../token/token.service";
+import { UsersClientGrpc } from "../users/users.grpc";
 
 import { TelegramRepository } from "./telegram.repository";
 
@@ -30,6 +31,7 @@ export class TelegramService {
 		private readonly redis: RedisService,
 		private readonly tokenService: TokenService,
 		private readonly userRepository: UserRepository,
+		private readonly usersClient: UsersClientGrpc,
 	) {
 		this.BOT_ID = configService.getOrThrow("telegram.botId", { infer: true });
 		this.BOT_TOKEN = configService.getOrThrow("telegram.botToken", {
@@ -71,6 +73,8 @@ export class TelegramService {
 		if (exists && exists.phone) {
 			return this.tokenService.generateTokens(exists.id);
 		}
+
+		this.usersClient.create({ id: exists.id }).subscribe();
 
 		const sessionId = randomBytes(16).toString("hex");
 

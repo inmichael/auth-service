@@ -13,6 +13,7 @@ import { RpcException } from "@nestjs/microservices";
 
 import { OtpService } from "../otp/otp.service";
 import { TokenService } from "../token/token.service";
+import { UsersClientGrpc } from "../users/users.grpc";
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,7 @@ export class AuthService {
 		private readonly otpService: OtpService,
 		private readonly tokenService: TokenService,
 		private readonly messagingService: MessagingService,
+		private readonly usersClient: UsersClientGrpc,
 	) {}
 
 	async sendOtp({ identifier, type }: SendOtpRequest) {
@@ -43,6 +45,8 @@ export class AuthService {
 			identifier,
 			type as "phone" | "email",
 		);
+
+		console.log("CODE: ", code);
 
 		await this.messagingService.otpRequested({
 			identifier,
@@ -78,6 +82,8 @@ export class AuthService {
 		if (type === "email" && !account.isEmailVerified) {
 			await this.userRepository.update(account.id, { isEmailVerified: true });
 		}
+
+		this.usersClient.create({ id: account.id }).subscribe();
 
 		return this.tokenService.generateTokens(account.id);
 	}
