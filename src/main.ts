@@ -15,7 +15,7 @@ async function bootstrap() {
 	app.enableShutdownHooks();
 
 	await app.startAllMicroservices();
-	await app.init();
+	await app.listen(9101);
 }
 
 bootstrap();
